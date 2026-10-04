@@ -1,0 +1,14 @@
+# pnpm 10+ 默认不执行依赖的构建脚本，并会在“存在被忽略的构建脚本”时
+# 直接报错退出。这里显式声明为不执行：Taro 的构建与小程序运行都依赖各包
+# 自带的预编译产物（esbuild、@swc/core、sharp 等通过可选依赖提供对应平台
+# 的二进制），实测无需运行它们的 postinstall 也能正常 build。
+allowBuilds:
+  '@parcel/watcher': false
+  '@swc/core': false
+  '@tarojs/binding': false
+  '@tarojs/cli': false
+  core-js: false
+  core-js-pure: false
+  esbuild: false
+  sharp: false
+  vue-demi: false
