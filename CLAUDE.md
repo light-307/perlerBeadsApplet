@@ -15,8 +15,13 @@ pnpm install
 # Development (WeChat mini-program with watch mode)
 npm run dev:weapp
 
-# Production build (auto-bumps version)
+# Production build (does NOT change the version)
 npm run build:weapp
+
+# Version bump: patch / minor / major
+npm run bump:patch
+npm run bump:minor
+npm run bump:major
 
 # Other platforms: dev:alipay, dev:swan, dev:tt, dev:qq, dev:h5
 
@@ -56,8 +61,13 @@ Pages: `editor` (pixel art editor), `profile` (artwork gallery), `home` (templat
 ## Documentation
 Project docs live in `docs/` (Chinese filenames): `docs/开发文档.md` is the full developer guide, `docs/images/` holds the screenshots referenced by the README.
 
+## Versioning & Release
+- The version follows semver and lives in `package.json` (`version`) plus `.env.production` (`TARO_APP_VERSION`, shown on the settings page). `scripts/bump-version.js` writes both, so never edit them by hand.
+- Bumping is explicit (`npm run bump:patch|minor|major`); building does not touch the version, so `package.json`, the git tag and the version uploaded to WeChat always agree.
+- Release flow: bump on `dev` → PR into `main` → tag `vX.Y.Z` on `main` and push the tag → publish a GitHub Release → upload to WeChat with the same version number.
+- `v0.1.0` is the fork baseline; from `v0.2.0` on, this repo and `perler-beads-ai` share one version scheme.
+
 ## Conventions
 - Design width is 750px with automatic px-to-rpx transformation via Taro's postcss plugin
-- Version is auto-incremented by `scripts/bump-version.js` during production builds
 - Output goes to `dist/` directory
 - The UI language is Chinese
