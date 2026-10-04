@@ -13,7 +13,7 @@
 
 ### 像素画编辑器
 
-- 可调节网格大小（默认 16x16）
+- 可调节网格大小（可选 16 / 24 / 32 / 48 / 100，默认 32×32）
 - 画笔/橡皮擦工具
 - 撤销/重做功能（最多 50 步历史记录）
 - 缩放功能
@@ -27,13 +27,15 @@
 - 分类筛选（全部/最近/收藏）
 - 作品状态标记（已完成/进行中）
 - 作品编辑、删除、导出
-- 搜索功能
+- 搜索框（当前仅为占位 UI，尚未实现检索逻辑）
 
-### 模板浏览
+### 模板浏览（当前未启用）
 
 - 瀑布流模板展示
 - 分类标签
 - 下拉刷新和无限加载
+
+> ⚠️ 模板页 `src/pages/home/index` 已在 `src/app.config.ts` 中注释掉，小程序当前不含该入口与 Tab；源码保留，待后续重新启用。
 
 ### 导出图纸功能
 
@@ -57,9 +59,11 @@
 | 网格颜色 | 网格线颜色 | 深灰色 |
 | 包含统计 | 是否包含色号统计 | true |
 
+![导出图纸示例](<docs/images/导出图纸示例.png> "导出图纸示例")
+
 ### 色号系统
 
-拼豆玩家必备的工具，系统支持 **5 大品牌色号系统**的完整映射，共收录 **217 种颜色**的精确对应关系。
+拼豆玩家必备的工具，系统支持 **5 大品牌色号系统**的完整映射，共收录 **205 种颜色**的精确对应关系。
 
 #### 品牌色号系统
 
@@ -96,16 +100,22 @@ export const colorSystemMapping: Record<string, ColorMapping>
 
 当用户绘制像素画时，系统通过以下步骤实现颜色到色号的转换：
 
-1. **HEX 颜色标准化**：将颜色值转为大写 HEX 格式（如 `#FF6B6B`）
+1. **HEX 颜色标准化**：将颜色值转为大写 HEX 格式（如 `#FAF4C8`）
 2. **查找映射表**：在 `colorSystemMapping` 中精确匹配 HEX 值
-3. **获取色号**：根据用户选择的品牌返回对应的色号
+3. **获取色号**：根据用户选择的品牌返回对应的色号；未命中映射表时返回 `'?'`
 
 ```typescript
+// 工具函数位于 src/utils/colorUtils.ts
+// getColorKeyByHex(hex: string, colorSystem: ColorSystem): string
+
 // 示例：获取某个 HEX 颜色对应的 MARD 色号
-getColorKeyByHex('#FF6B6B', 'MARD')  // 返回 'F01'
+getColorKeyByHex('#FAF4C8', 'MARD')  // 返回 'A01'
 
 // 切换品牌后获取同一颜色的盼盼色号
-getColorKeyByHex('#FF6B6B', '盼盼')  // 返回 '31'
+getColorKeyByHex('#FAF4C8', '盼盼')  // 返回 '65'
+
+// 映射表中不存在的颜色返回 '?'
+getColorKeyByHex('#FF6B6B', 'MARD')  // 返回 '?'
 ```
 
 #### 对比色算法
@@ -139,14 +149,15 @@ function getContrastColor(hex: string): string {
 
 ## 项目截图
 
-### 主页
-
-![主页](<screenshot/main.png> "主页")
-
 ### 编辑器
 
-![编辑器](<screenshot/editor.png> "编辑器")
+![编辑器](<docs/images/编辑器.png> "编辑器")
 
+### 主页（模板页，当前未启用）
+
+![主页](<docs/images/主页.png> "主页")
+
+> 上图对应的模板首页 `src/pages/home/index` 已在 `src/app.config.ts` 中被注释，当前版本小程序不含该入口与 Tab，源码保留待后续启用。
 
 ## 技术栈
 
@@ -161,7 +172,7 @@ function getContrastColor(hex: string): string {
 
 ## 环境要求
 
-- Node.js >= 16.x
+- Node.js >= 18.x（Taro 4 要求）
 - npm >= 8.x 或 pnpm >= 7.x
 - 微信开发者工具（用于微信小程序开发和预览）
 
@@ -341,32 +352,35 @@ perlerBeadsApplet/
 │   │   │   │   ├── menu/         # 顶部菜单栏
 │   │   │   │   └── toolArea/     # 底部工具区域
 │   │   │   └── index.vue         # 编辑器页面
-│   │   ├── profile/        # 个人作品页
-│   │   ├── home/           # 模板首页
+│   │   ├── profile/        # 作品列表页
+│   │   ├── home/           # 模板首页（已在 app.config.ts 中注释，未启用）
 │   │   ├── saveForm/       # 保存表单
 │   │   ├── detail/         # 作品详情
 │   │   ├── settings/       # 设置页
 │   │   └── debug/          # 调试工具页
 │   ├── components/         # 公共组件
-│   │   ├── DownloadSettingsModal/ # 下载设置弹窗
 │   │   └── MIcon/          # Material Design Icons 封装
+│   ├── custom-tab-bar/     # 自定义 TabBar（我的 / 编辑器）
 │   ├── stores/             # Pinia 状态管理
 │   │   ├── editorTemp.ts   # 编辑器临时数据
 │   │   └── user.ts         # 用户信息
 │   ├── utils/              # 工具函数
 │   │   ├── pixelArt.ts     # 像素画渲染/导出/导入算法
-│   │   ├── colorData.ts    # 色号系统：5大品牌色号映射
+│   │   ├── colorData.ts    # 色号系统：5 大品牌色号映射表
+│   │   ├── colorUtils.ts   # 色号查询/取色/对比色工具
 │   │   ├── storage.ts      # 本地存储 CRUD
 │   │   ├── base64.ts       # ArrayBuffer ↔ Base64 转换
-│   │   └── request/        # HTTP 请求封装
-│   ├── types/              # TypeScript 类型定义
-│   │   └── downloadTypes.ts # 导出图纸相关类型定义
-│   └── config/             # 配置文件
-├── docs/                   # 开发文档
-│   └── developer-guide.md  # 开发者文档
+│   │   └── request/        # HTTP 请求封装（已实现，当前业务未使用）
+│   ├── config/             # 应用/主题/接口配置
+│   ├── styles/             # 全局样式
+│   └── types/              # TypeScript 类型定义
+│       └── downloadTypes.ts # 导出图纸相关类型定义
+├── docs/                   # 文档目录
+│   ├── 开发文档.md          # 开发者文档（架构 / 模块 / 算法详解）
+│   └── images/             # 文档内引用的截图
 ├── config/                 # Taro 构建配置
-├── scripts/                # 构建脚本
-├── screenshot/             # 项目截图
+├── scripts/                # 构建脚本（版本号自增）
+├── types/                  # 全局类型声明（global.d.ts / vue.d.ts）
 ├── package.json            # 项目依赖
 ├── tsconfig.json           # TypeScript 配置
 └── project.config.json     # 微信小程序配置
@@ -399,7 +413,7 @@ interface PixelArtData {
 
 文件：`src/utils/colorData.ts`
 
-支持 5 大品牌色号的完整映射，共 217 种颜色：
+支持 5 大品牌色号的完整映射，共 205 种颜色：
 - MARD（丹麦品牌）- 默认
 - COCO（可可色系）
 - 漫漫
@@ -426,7 +440,7 @@ type GridDownloadOptions = {
 
 ## 开发指南
 
-> 📖 **详细开发文档**：如需了解更多技术细节，请参阅 [开发者文档](./docs/developer-guide.md)。
+> 📖 **详细开发文档**：如需了解更多技术细节，请参阅 [开发文档](./docs/开发文档.md)。
 
 ### 版本更新
 

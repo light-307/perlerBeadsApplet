@@ -43,13 +43,18 @@ Pages: `editor` (pixel art editor), `profile` (artwork gallery), `home` (templat
 - `user` — user authentication and profile data
 
 ### Key Utilities (`src/utils/`)
-- `pixelArt.ts` — core pixel art logic (grid manipulation, color operations)
-- `request/` — API service factory with typed REST service generators, interceptors
+- `pixelArt.ts` — core pixel art logic (rendering/export/import, pattern image generation)
+- `colorData.ts` — the 5-brand color-code mapping table (205 hex entries)
+- `colorUtils.ts` — color-code lookup, palette building, contrast color helpers
+- `request/` — API service factory with typed REST service generators, interceptors (implemented but unused by pages)
 - `storage.ts` — local storage wrappers
-- `base64.ts`, `filedata.ts` — file encoding utilities
+- `base64.ts` — ArrayBuffer ↔ Base64 conversion
 
 ### Components
 - `MIcon` — Material Design Icons wrapper component
+
+## Documentation
+Project docs live in `docs/` (Chinese filenames): `docs/开发文档.md` is the full developer guide, `docs/images/` holds the screenshots referenced by the README.
 
 ## Conventions
 - Design width is 750px with automatic px-to-rpx transformation via Taro's postcss plugin
