@@ -38,9 +38,7 @@ export default defineConfig<'vite'>(async (merge, { command, mode }) => {
     // 配置 @ 指向 src 目录
     '@': path.resolve(__dirname, '..', 'src'),
     // 可选：可配置更多别名，比如 @components 指向组件目录
-    '@components': path.resolve(__dirname, '..', 'src/components'),
-    // lib 目录别名
-    '@lib': path.resolve(__dirname, '..', 'lib/src')
+    '@components': path.resolve(__dirname, '..', 'src/components')
   },
     mini: {
       postcss: {

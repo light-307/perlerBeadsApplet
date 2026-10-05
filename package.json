@@ -1,7 +1,8 @@
 {
   "name": "perlerBeadsApplet",
-  "version": "1.0.38",
+  "version": "0.2.0",
   "private": true,
+  "packageManager": "pnpm@11.7.0",
   "description": "拼豆小程序",
   "templateInfo": {
     "name": "vue3-pinia",
@@ -11,7 +12,10 @@
   },
   "scripts": {
     "bump-version": "node scripts/bump-version.js",
-    "build:weapp": "node scripts/bump-version.js && taro build --type weapp",
+    "bump:patch": "node scripts/bump-version.js patch",
+    "bump:minor": "node scripts/bump-version.js minor",
+    "bump:major": "node scripts/bump-version.js major",
+    "build:weapp": "taro build --type weapp",
     "build:swan": "taro build --type swan",
     "build:alipay": "taro build --type alipay",
     "build:tt": "taro build --type tt",
@@ -19,7 +23,7 @@
     "build:rn": "taro build --type rn",
     "build:qq": "taro build --type qq",
     "build:quickapp": "taro build --type quickapp",
-    "dev:weapp": "npm run build:weapp -- --watch",
+    "dev:weapp": "taro build --type weapp --watch",
     "dev:swan": "npm run build:swan -- --watch",
     "dev:alipay": "npm run build:alipay -- --watch",
     "dev:tt": "npm run build:tt -- --watch",

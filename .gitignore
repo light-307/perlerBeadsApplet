@@ -7,3 +7,6 @@ node_modules/
 .swc
 .env
 perler-beads-ai-main0/
+
+# 历史构建产物（已从版本库移除）
+/lib/
